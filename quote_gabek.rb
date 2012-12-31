@@ -43,25 +43,22 @@ while true do
   tweets.each do |tweet|
     if tweet[:id] > last_tweet && tweet[:text].length <= 115
       # 115 for the "As @gabe_k once said, "." part"
-      if tweet[:text].length <= 115
-        # If there's a trailing period, remove it. We're adding one, so yeah
-        tweet_text = "As @gabe_k once said, \"#{tweet[:text].gsub(/.$/, "")}.\""
-        max_string = 140 - tweet_text.length
-        trailing_words.each do |word|
-          # If a trailing word will fit at the end of the tweet, add one
-          if word.length + 1 <= max_string
-            tweet_text = "#{tweet_text} #{word}#{if word[-1] != "." && word.length + 2 <= max_string then "." end }"
-            break
-          end
+      # If there's a trailing period, remove it. We're adding one, so yeah
+      tweet_text = "As @gabe_k once said, \"#{tweet[:text].gsub(/.$/, "")}.\""
+      max_string = 140 - tweet_text.length
+      trailing_words.each do |word|
+        # If a trailing word will fit at the end of the tweet, add one
+        if word.length + 1 <= max_string
+          tweet_text = "#{tweet_text} #{word}#{if word[-1] != "." && word.length + 2 <= max_string then "." end }"
+          break
         end
-        File.open("last_tweet_id.txt", "w") { |f| f.truncate(0); f.print tweet[:id] }
       end
+      Twitter.update(tweet_text)
+      puts "#{Time.now} Tweeted: #{tweet_text}"
+      File.open("last_tweet_id.txt", "w") { |f| f.truncate(0); f.print tweet[:id] }
+      break
     end
   end
 
-  if tweet_text != nil
-    Twitter.update(tweet_text)
-    puts "Tweeted: #{tweet_text}"
-  end
   sleep 3 * 60 * 60
 end
