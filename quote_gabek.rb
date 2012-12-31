@@ -41,15 +41,15 @@ while true do
   # Randomize the tweets so that we aren't always picking the most recent tweet
   tweets.shuffle!
   tweets.each do |tweet|
-    if tweet[:id] > last_tweet && tweet[:text].length <= 135
-      # 135 for the "As @gabe_k once said, "." part"
-      if tweet[:text].length <= 135
+    if tweet[:id] > last_tweet && tweet[:text].length <= 115
+      # 115 for the "As @gabe_k once said, "." part"
+      if tweet[:text].length <= 115
         # If there's a trailing period, remove it. We're adding one, so yeah
         if tweet[:text][-1] == "."
           tweet[:text][-1] = ""
         end
         tweet_text = "As @gabe_k once said, \"#{tweet[:text]}.\""
-        max_string = 160 - tweet_text.length
+        max_string = 140 - tweet_text.length
         trailing_words.each do |word|
           # If a trailing word will fit at the end of the tweet, add one
           if word.length + 1 <= max_string
