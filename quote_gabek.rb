@@ -45,10 +45,7 @@ while true do
       # 115 for the "As @gabe_k once said, "." part"
       if tweet[:text].length <= 115
         # If there's a trailing period, remove it. We're adding one, so yeah
-        if tweet[:text][-1] == "."
-          tweet[:text][-1] = ""
-        end
-        tweet_text = "As @gabe_k once said, \"#{tweet[:text]}.\""
+        tweet_text = "As @gabe_k once said, \"#{tweet[:text].gsub(/.$/, "")}.\""
         max_string = 140 - tweet_text.length
         trailing_words.each do |word|
           # If a trailing word will fit at the end of the tweet, add one
