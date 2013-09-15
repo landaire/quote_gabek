@@ -11,10 +11,10 @@ require File.join(File.dirname(__FILE__), 'credentials.rb')
 #    config.oauth_token_secret = YOUR_OAUTH_TOKEN_SECRET
 #  end
 
-trailing_words = ["So trill", "Trill", "True", "Real talk", "Why aren't I gay?", "If only he loved bots", "Oh",
-                  "#realtalk", "#lovehim", "#trill", "#trillistniggaalive", "#thingshomosexualssay", "Sexy", "#random",
+trailing_words = ["So trill", "Trill", "True", "Real talk", "If only he loved bots", "Oh",
+                  "#realtalk", "#lovehim", "#trill", "Sexy", "#random",
                   "#myboo", "#sosexy", "SENDING OUT AN SOS", "So that's what sank the Titanic?", "Whores these days...",
-                  "#foreverandever", "Yeah, fuck @_skitzo", "I wonder if he's a local single in my area..."
+                  "#foreverandever", "I wonder if he's a local single in my area..."
 ]
 
 while true do
