@@ -3,13 +3,14 @@ require 'active_support/all' # Too lazy to actually do date subtraction and stuf
 require 'twitter'
 require File.join(File.dirname(__FILE__), 'credentials.rb')
 
-#Create and add the "credentials.rb" file in the same directory as this script, containing:
-#  Twitter.configure do |config|
-#    config.consumer_key = YOUR_CONSUMER_KEY
-#    config.consumer_secret = YOUR_CONSUMER_SECRET
-#    config.oauth_token = YOUR_OAUTH_TOKEN
-#    config.oauth_token_secret = YOUR_OAUTH_TOKEN_SECRET
-#  end
+# Create and add the "credentials.rb" file in the same directory as this script, containing:
+
+# @client = Twitter::REST::Client.new do |config|
+#   config.consumer_key = "CONSUMER_KEY"
+#   config.consumer_secret = "CONSUMER_SECRET"
+#   config.access_token = "ACCESS_TOKEN"
+#   config.access_token_secret = "ACCESS_TOKEN_SECRET"
+# end
 
 trailing_words = ["So trill", "Trill", "True", "Real talk", "If only he loved bots", "Oh",
                   "#realtalk", "#lovehim", "#trill", "Sexy", "#random",
@@ -19,7 +20,7 @@ trailing_words = ["So trill", "Trill", "True", "Real talk", "If only he loved bo
 
 while true do
   # If the last tweet was within an hour, sleep for an hour
-  if Twitter.user_timeline("QuotesGabek", :count => 1).first[:created_at] > (Time.now - 1.hour)
+  if @client.user_timeline("QuotesGabek", :count => 1).first.created_at > (Time.now - 1.hour)
     sleep 60 * 60
   end
 
@@ -35,16 +36,16 @@ while true do
                end
 
   # Fetch gabe_k's timeline
-  tweets = Twitter.user_timeline("gabe_k", :count => 30, :include_rts => false)
+  tweets = @client.user_timeline("gabe_k", :count => 30, :include_rts => false)
 
   tweet_text = nil
   # Randomize the tweets so that we aren't always picking the most recent tweet
   tweets.shuffle!
   tweets.each do |tweet|
-    if tweet[:id] > last_tweet && tweet[:text].length <= 115
+    if tweet.id > last_tweet && tweet.text.length <= 115
       # 115 for the "As @gabe_k once said, "." part"
       # If there's a trailing period, remove it. We're adding one, so yeah
-      tweet_text = "As @gabe_k once said, \"#{tweet[:text].gsub(/.$/, "")}.\""
+      tweet_text = "As @gabe_k once said, \"#{tweet.text.gsub(/.$/, "")}.\""
       max_string = 140 - tweet_text.length
       trailing_words.each do |word|
         # If a trailing word will fit at the end of the tweet, add one
@@ -53,9 +54,9 @@ while true do
           break
         end
       end
-      Twitter.update(tweet_text)
+      client.update(tweet_text)
       puts "#{Time.now} Tweeted: #{tweet_text}"
-      File.open("last_tweet_id.txt", "w") { |f| f.truncate(0); f.print tweet[:id] }
+      File.open("last_tweet_id.txt", "w") { |f| f.truncate(0); f.print tweet.id }
       break
     end
   end
